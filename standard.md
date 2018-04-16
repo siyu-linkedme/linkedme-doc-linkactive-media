@@ -25,9 +25,9 @@ SDK和API接入的形式各有优劣，我们建议您使用SDK方式接入。
 ## SDK接入文档
 查看SDK接入文档：
 
-[iOS平台](/ios-sdk.md)
+[iOS平台](https://sspsdkdoc.lkme.cc/ios-sdk.html)
 
-[Android平台](/android-sdk.md)
+[Android平台](https://sspsdkdoc.lkme.cc/android-sdk.html)
 
 ## SDK接入注意事项
 接入前请向LinkedME要SDK包，以及linkedme_key值和ad_position的值。
