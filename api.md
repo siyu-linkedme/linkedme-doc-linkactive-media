@@ -111,7 +111,7 @@ ad_click.setOnClickListener(new View.OnClickListener() {
             req.userName = user_name; // 微信小程序原始id
             req.path = path;  //拉起小程序页面的可带参路径，不填默认拉起小程序首页
             req.miniprogramType = WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE;// 打开正式版
-            // api为IWXAPI对象
+            // api为IWXAPI对象，参考移动应用拉起小程序Android端代码示例：https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=21526646437Y6nEC&token=&lang=zh_CN
             api.sendReq(req);
             // 拉活APP后，调用track的active_urls字段中的链接上报状态
         }else if(adInfo.getAdType() == 0)){
