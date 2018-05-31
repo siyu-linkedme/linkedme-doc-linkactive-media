@@ -322,6 +322,7 @@ optional : 可选字段 (默认类型)
 |ad_position_id|String|required|媒体广告位标识，由LinkedME提供|
 |app_name|String|required|媒体APP名称|
 |ver|String|optional|媒体APP版本号|
+|<font color=red>wechat_ver</font>|<font color=red>String</font>|<font color=red>optional</font>|<font color=red>微信APP版本号，未安装则传空字符串，若广告位包含微信小程序唤起则该字段值必传，否则无法返回小程序广告</font>|
 
 #### user对象
 |字段	|类型	|是否必填 | 描述|
