@@ -62,46 +62,69 @@ LinkActive的接口请求广告时，返回的是按照优先级排序的每个�
 
 ```java
 
-//check_install_status字段使用示例代码
-// adInfoArrayList为调用get_ad接口获取的广告列表，AdInfo为广告实体
+// adInfoArrayList对象为调用get_ad接口获取的广告列表，AdInfo为广告实体
 ArrayList<AdInfo> adInfoArrayList = new ArrayList<>();
-// 检查应用是否安装，以判断是否需要显示广告
-    for (int i = 0; i < adInfoArrayList.size(); i++) {
-        AdInfo adInfo = adInfoArrayList.get(i);
-// 判断应用是否需要检查安装状态
-        if(adInfo.getCheckInstallStatus().equals("1")){
-// 需要
-            if(isPkgInstalled(this, adInfo.getPackageName())){
-// 此广告可展示
-            }else{
-// 此广告不可展示
+for (int i = 0; i < adInfoArrayList.size(); i++) {
+    AdInfo adInfo = adInfoArrayList.get(i);
+    // 不同的广告类型走不同的处理逻辑
+    // 广告类型：0:普通广告（默认）2:微信小程序广告
+    if (adInfo.getAdType() == 2) {
+        // 2:小程序广告，此广告可直接展示
+        // 展示广告后，调用track的imp_urls字段中的链接上报状态
+        break;
+    }else if (adInfo.getAdType() == 0){
+        // 0:普通广告
+        // 判断应用是否需要检查安装状态
+        if ("1".equals(adInfo.getCheckInstallStatus())) {
+            // 需要检查安装状态
+            if (isPkgInstalled(this, adInfo.getPackageName())) {
+                // 此广告可展示
+                // 展示广告后，调用track的imp_urls字段中的链接上报状态
+                break;
+            }
+        } else {
+            // 不需要检查安装状态
+            // 此广告可展示
+            // 展示广告后，调用track的imp_urls字段中的链接上报状态
+            break;
         }
-    }else{
-// 不需要
-// 此广告可展示
-}
+    }
 }
 
 //广告点击
 ad_click.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View view){
-//此处通知服务器点击了广告，修改status为12
+    // 点击广告后，调用track的deeplink_urls字段中的链接上报状态
     String uriString = "lkmedemo://?click_id=G4LCXAjn7";
     String packageName = "com.microquation.linkedme";
     String h5_url = "http://www.linkedme.cc";
     String apk_url = "https://github.com/WFC-LinkedME/LinkedME-Android-Deep-Linking-Demo/blob/master/LinkedME-Android-Demo.apk?raw=true";
+    String user_name = "gh_b83a75769dc2";
+    String path = " pages/details?id=3782&from=linkedme&imei=<Android手机imei号>&idfa=<iOS手机idfa号> ";
+
     try {
+        if(adInfo.getAdType() == 2)){
+            // 2:微信小程序广告
+            WXLaunchMiniProgram.Req req = new WXLaunchMiniProgram.Req();
+            req.userName = user_name; // 微信小程序原始id
+            req.path = path;  //拉起小程序页面的可带参路径，不填默认拉起小程序首页
+            req.miniprogramType = WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE;// 打开正式版
+            // api为IWXAPI对象
+            api.sendReq(req);
+            // 拉活APP后，调用track的active_urls字段中的链接上报状态
+        }else if(adInfo.getAdType() == 0)){
             Intent intent = Intent.parseUri(uriString, Intent.URI_INTENT_SCHEME);
             intent.setPackage(packageName);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             ResolveInfo resolveInfo = DemoActivity.this.getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
             if (resolveInfo != null) {
-                    startActivity(intent);
-//此处通知服务器唤起了APP，修改status为13
-            } else {
+                startActivity(intent);
+                // 拉活APP后，调用track的active_urls字段中的链接上报状态
+                } else {
                 openAppWithPN(packageName, uriString, h5_url, apk_url);
             }
+        }
     } catch (URISyntaxException ignore) {
         openAppWithPN(packageName, uriString, h5_url, apk_url);
         }
@@ -116,35 +139,35 @@ ad_click.setOnClickListener(new View.OnClickListener() {
 * @param apk_url apk下载地址
 */
 private void openAppWithPN(String packageName, String uriString, String h5_url, String apk_url) {
-//如果通过uri scheme没有唤起APP，则尝试包名唤起APP
+    //如果通过uri scheme没有唤起APP，则尝试包名唤起APP
     Intent resolveIntent = DemoActivity.this.getPackageManager().getLaunchIntentForPackage(packageName);
-// 启动目标应用
+    // 启动目标应用
     if (resolveIntent != null) {
         resolveIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         resolveIntent.setData(Uri.parse(uriString));
         DemoActivity.this.startActivity(resolveIntent);
-//此处通知服务器唤起了APP，修改status为13
-        } else {
-//此处通知服务器未唤起APP，修改status为14
-//建议未唤起APP打开h5页面的同时下载apk，引导用户安装
-            if (!TextUtils.isEmpty(h5_url)) {
-                openH5Url(h5_url);
-            }
-            if (!TextUtils.isEmpty(apk_url)) {
-//此处通知服务器未唤起APP，引导用户下载APP，修改status为15
-// 应用内开启服务下载apk文件或通过外部浏览器下载apk文件
-            }
+        // 拉活APP后，调用track的active_urls字段中的链接上报状态
+    } else {
+        // 建议未唤起APP打开h5页面的同时下载apk，引导用户安装
+        if (!TextUtils.isEmpty(h5_url)) {
+            // 未拉活APP后，调用track的openstore_urls字段中的链接上报状态
+            openH5Url(h5_url);
+        }
+        if (!TextUtils.isEmpty(apk_url)) {
+            // 应用内开启服务下载apk文件或通过外部浏览器下载apk文件
+            // 未拉活APP后，调用track的download_urls字段中的链接上报状态
         }
     }
+}
 
 /**
 * 打开h5链接
 * @param h5_url h5链接
 */
 private void openH5Url(String h5_url) {
-// 应用内WebView打开h5页面或在外部浏览器中打开h5页面
-// 若在应用内WebView中打开h5地址，h5地址可能是一个引导用户下载apk的地址，需要注意处理点击h5页面内apk下载链接的情况；
-// 若在外置浏览器中打开则无需处理。
+    // 应用内WebView打开h5页面或在外部浏览器中打开h5页面
+    // 若在应用内WebView中打开h5地址，h5地址可能是一个引导用户下载apk的地址，需要注意处理点击h5页面内apk下载链接的情况；
+    // 若在外置浏览器中打开则无需处理。
 }
 
 ```
@@ -340,6 +363,8 @@ optional : 可选字段 (默认类型)
 |adid|String|required|广告id|
 |cid|String|required|创意id|
 |ad_content|Object|required|创意内容|
+|<font color=red>ad_type</font>|<font color=red>int</font>|<font color=red>required</font>|<font color=red>广告类型<br>0:普通广告（默认）<br>1:全部广告类型<br>2:微信小程序广告</font>|
+
 
 #### ad_content对象
 |字段	|类型	|是否必填 | 描述|
@@ -352,6 +377,8 @@ optional : 可选字段 (默认类型)
 |title|String|optional|标题|
 |sub_title|String|optional|描述|
 |content|String|optional|保留|
+|<font color=red>user_name</font>|<font color=red>String</font>|<font color=red>required</font>|<font color=red>微信小程序原始id</font>|
+|<font color=red>path</font>|<font color=red>String</font>|<font color=red>required</font>|<font color=red>拉起小程序页面的可带参路径（例：pages/details?id=3782&from=linkedme&imei=<Android手机imei号>&idfa=<iOS手机idfa号>）</font>|
 
 #### track对象
 |字段	|类型	|是否必填 | 描述|
