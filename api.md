@@ -53,6 +53,7 @@ LinkActive的接口请求广告时，返回的是按照优先级排序的每个�
 
 
 # 分平台逻辑及代码示例
+![](/assets/mini_program.jpg)
 ## Android端逻辑
 1. 调用“/ad/openapi/v2/get_ad”接口获取广告列表数据(建议服务端调用)，LinkedME可能返回多条广告；获取数据后，根据check_install_status字段的值确认是否需要判断安装状态，如需要则通过pkg_name逐条判断应用是否已安装，最终获得有效广告列表，顺次显示广告；若均无效则不展示广告。
 2. 用户点击广告唤起APP 当用户点击广告时，通过uri scheme唤起APP(如果第一步展示了未安装的APP广告，跳转到h5地址，建议同时后台下载apk包)。
