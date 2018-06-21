@@ -379,6 +379,7 @@ optional : 可选字段 (默认类型)
 |title|String|optional|标题|
 |sub_title|String|optional|描述|
 |content|String|optional|保留|
+|<font color=red>app_appid</font>|<font color=red>String</font>|<font color=red>required</font>|<font color=red>微信小程序绑定的应用的appid</font>|
 |<font color=red>mini_appid</font>|<font color=red>String</font>|<font color=red>required</font>|<font color=red>微信小程序appid</font>|
 |<font color=red>user_name</font>|<font color=red>String</font>|<font color=red>required</font>|<font color=red>微信小程序原始id</font>|
 |<font color=red>path</font>|<font color=red>String</font>|<font color=red>required</font>|<font color=red>拉起小程序页面的可带参路径（例：pages/details?id=3782&from=linkedme&imei=<Android手机imei号>&idfa=<iOS手机idfa号>）</font>|
