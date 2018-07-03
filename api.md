@@ -365,7 +365,7 @@ optional : 可选字段 (默认类型)
 |adid|String|required|广告id|
 |cid|String|required|创意id|
 |ad_content|Object|required|创意内容|
-|<font color=red>ad_type</font>|<font color=red>int</font>|<font color=red>required</font>|<font color=red>广告类型<br>0:普通广告（默认）<br>1:全部广告类型<br>2:微信小程序广告</font>|
+|<font color=red>ad_type</font>|<font color=red>int</font>|<font color=red>required</font>|<font color=red>广告类型<br>0:普通广告（默认）<br>1:全部广告类型（实际不会返回该类型）<br>2:微信小程序广告</font>|
 
 
 #### ad_content对象
