@@ -393,7 +393,8 @@ optional : 可选字段 (默认类型)
 |not_active_urls|String Array|optional|iOS点击了，但是没有拉活|
 |openstore_urls|String Array|optional|进入应用商店|
 |download_urls|String Array|optional|开始下载上报|
-
+|download_end_urls|String Array|optional|下载完成上报|
+|install_end_urls|String Array|optionnal|安装完成上报|
 
 ### 请求示例
 
