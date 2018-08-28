@@ -75,11 +75,11 @@ for (int i = 0; i < adInfoArrayList.size(); i++) {
         break;
     }else if (adInfo.getAdType() == 0){
         // 0:普通广告
-        // 判断应用是否需要检查安装状态
+        // 判断应用是否需要检查App的安装状态
         if ("1".equals(adInfo.getCheckInstallStatus())) {
             // 需要检查安装状态
-            if (isPkgInstalled(this, adInfo.getPackageName())) {
-                // 此广告可展示
+            if (isAppInstalled(this, adInfo.getPackageName())) {
+                // 根据返回的包名检查广告主App是否安装，安装则此广告可展示
                 // 展示广告后，调用track的imp_urls字段中的链接上报状态
                 break;
             }
@@ -169,6 +169,26 @@ private void openH5Url(String h5_url) {
     // 应用内WebView打开h5页面或在外部浏览器中打开h5页面
     // 若在应用内WebView中打开h5地址，h5地址可能是一个引导用户下载apk的地址，需要注意处理点击h5页面内apk下载链接的情况；
     // 若在外置浏览器中打开则无需处理。
+}
+
+/**
+ * 根据包名判断是否安装了APP
+ *
+ * @param pkgName 包名
+ * @return true:安装 false:未安装
+ */
+public static boolean isAppInstalled(Context context, String pkgName) {
+   PackageInfo packageInfo = null;
+   try {
+       packageInfo = context.getPackageManager().getPackageInfo(pkgName, 0);
+   } catch (PackageManager.NameNotFoundException ignore) {
+       packageInfo = null;
+   }
+   if (packageInfo == null) {
+       return false;
+   } else {
+       return true;
+   }
 }
 
 ```
