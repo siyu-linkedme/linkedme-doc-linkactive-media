@@ -527,7 +527,7 @@ optional : 可选字段 (默认类型)
 |ad_position_id|String|required|媒体广告位标识，由LinkedME提供|
 |adid|String|required|广告id|
 |cid|String|required|创意id|
-|status|int|required|上报类型<br>11  曝光<br>12  点击深度链接<br>13  拉活<br>14  iOS系统下，点击深度链接，但是没有唤起APP<br>15  开始下载<br>16  下载完成<br>17  安装完成<br>|    
+|status|int|required|上报类型<br>11  曝光<br>12  点击深度链接<br>13  拉活<br>14  iOS系统下，点击广告，但是没有唤起APP<br>15  开始下载<br>16  下载完成<br>17  安装完成<br>|    
 |test|int|optional|值为0或1<br>0：live<br>1：test<br>默认为0|
 
 
